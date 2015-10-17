@@ -1,45 +1,14 @@
 var Http = require('machinepack-http');
+var scionMachinepack = require('../');
 var scxml = require('scxml');
 
 var PKG = 'Http';
 var NS = "https://github.com/mikermcneil/machinepack-http/";    //TODO: maybe this can be derived from the package.json?
-var plugin = {};
-
-plugin[NS] = {};
-
-//TODO: provide a mechanism to register plugin globally. Like, not on the object.
-
-//register two custom methods on SCION
-Object.keys(Http).forEach(function(machinepackId){
-  var machinepack = Http[machinepackId];
-
-  plugin[NS][machinepackId] = function(action){
-    return PKG + '.' + machinepackId + '({\n' +
-      Object.keys(machinepack.inputs).map(function(key){
-        var inputExpression;
-        if(action[key]){
-          inputExpression = JSON.stringify(action[key]);
-        } else if(action[key + 'expr']){
-          inputExpression = action[key + 'expr'];
-        } else if (machinepack.inputs[key].required) {
-          throw new Error('Compiler error: missing required attribute ' + key);
-        } else {
-          //ignore. input is missing, but not required
-        }
-
-        return '    ' + key + ' : ' + inputExpression; 
-      }).join(',\n') + 
-    '\n}).exec({\n' +
-      //exits map to events
-      Object.keys(machinepack.exits).map(function(key){
-        return '    ' + key + ' : (function(result){ this.send({name : ' + JSON.stringify(PKG + '.' + key) + ', data : result}); }).bind(this)'
-      }).join(',\n') + 
-    '\n});'
-  }
-});
 
 var customRuntimeGlobals = {};
 customRuntimeGlobals[PKG] = Http;
+
+var plugin = scionMachinepack.machinepackToPlugin(Http, PKG, NS); 
 
 scxml.pathToModel(__dirname + '/plugin.scxml', function(err, model) {
   console.log('model',model);
