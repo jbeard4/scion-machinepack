@@ -1,0 +1,17 @@
+<scxml 
+  xmlns="http://www.w3.org/2005/07/scxml"
+  xmlns:http="https://github.com/mikermcneil/machinepack-http/"
+  version="1.0">
+
+  <state id="a">
+    <onentry>
+      <http:fetchWebpageHtml url="http://www.google.com/"/>
+    </onentry>
+    <transition event="Http.success" target="b">
+      <log label="Received Http.success event"/>
+    </transition>
+  </state>
+
+  <state id="b"/>
+  <state id="c"/>
+</scxml>

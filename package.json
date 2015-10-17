@@ -1,0 +1,17 @@
+{
+  "name": "scion-machinepack",
+  "version": "1.0.0",
+  "description": "Machinepack integration for SCION.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "machinepack-http": "^2.3.0"
+  },
+  "dependencies": {
+    "scxml": "github:jbeard4/SCION#77d3363f958f27cc125a3936a03aa1a301682d20"
+  }
+}
